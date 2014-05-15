@@ -1,0 +1,10 @@
+#!/bin/sh -e
+while true
+do
+    echo -e -n `date --utc +%Y-%m-%d-%H:%M:%S` >> log
+    sensors > temp
+    echo -e -n "\t" `grep Core temp | awk '{print $3}' |sed -e s#°C##` >> log
+    smartctl -A /dev/sda > temp
+    echo -e "\t" `grep Temperature_Celsius temp | awk '{print $10}'` >> log
+    sleep 60
+done
