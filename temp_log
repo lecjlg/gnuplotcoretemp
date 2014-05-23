@@ -1,10 +1,11 @@
 #!/bin/sh -e
 while true
-do
-    echo -e -n `date --utc +%Y-%m-%d-%H:%M:%S` >> log
-    sensors > temp
-    echo -e -n "\t" `grep Core temp | awk '{print $3}' |sed -e s#°C##` >> log
-    smartctl -A /dev/sda > temp
-    echo -e "\t" `grep Temperature_Celsius temp | awk '{print $10}'` >> log
+do 
+    probe=`tail -1 /data/logfiles/tempprobe/serial-temperature.tsv |awk '{print $2}'`
+    echo -e -n `date --utc +%Y-%m-%d-%H:%M:%S` >> /data/logfiles/tempprobe/log
+    sensors > /data/logfiles/tempprobe/temp
+    echo -e -n "\t" `grep Core /data/logfiles/tempprobe/temp | awk '{print $3}' |sed -e s#°C##` >> /data/logfiles/tempprobe/log
+    smartctl -A /dev/sda > /data/logfiles/tempprobe/temp
+    echo -e "\t" `grep Temperature_Celsius /data/logfiles/tempprobe/temp | awk '{print $10}'` "\t" $probe >> /data/logfiles/tempprobe/log    
     sleep 60
 done
